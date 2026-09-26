@@ -1,0 +1,30 @@
+{
+  "date": "2026-09-26",
+  "fetched_at": "2026-09-26T21:01:31+00:00",
+  "asset": "USDT",
+  "reference_source": "https://open.er-api.com/v6/latest/USD",
+  "reference_asof": "Sat, 26 Sep 2026 00:02:32 +0000",
+  "markets": {
+    "NGN": {
+      "p2p": 1366.75,
+      "reference": 1328.9601,
+      "premium_pct": 2.84,
+      "depth": 10,
+      "source": "bybit"
+    },
+    "GHS": {
+      "p2p": 12.04,
+      "reference": 11.5678,
+      "premium_pct": 4.08,
+      "depth": 10,
+      "source": "bybit"
+    },
+    "KES": {
+      "p2p": 129.4,
+      "reference": 129.5115,
+      "premium_pct": -0.09,
+      "depth": 10,
+      "source": "bybit"
+    }
+  }
+}

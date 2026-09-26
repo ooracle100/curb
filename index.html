@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Curb: the price of a dollar in African markets</title>
+<meta name="description" content="What a dollar of USDT costs on peer-to-peer markets in Nigeria, Ghana and Kenya, against the reference rate. Updated daily.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F4F1E9;
+    --ink: #14130F;
+    --mid: #6A6559;
+    --rule: #D8D2C4;
+    --panel: #1C1A16;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  *, *::before, *::after { box-sizing: inherit; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 62rem; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+
+  header { border-bottom: 1px solid var(--rule); padding-bottom: 1.75rem; }
+  .wordmark {
+    font-family: Newsreader, Georgia, serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    color: var(--mid);
+    margin: 0 0 1.25rem;
+  }
+
+  h1 {
+    font-family: Newsreader, Georgia, serif;
+    font-weight: 300;
+    font-size: clamp(2rem, 5.5vw, 3.25rem);
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.75rem;
+    max-width: 18ch;
+  }
+  .standfirst {
+    font-family: Newsreader, Georgia, serif;
+    font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+    line-height: 1.5;
+    color: var(--mid);
+    margin: 0;
+    max-width: 58ch;
+  }
+  .standfirst b { color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; }
+
+  .markets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    margin: 2.5rem 0 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .market {
+    flex: 1 1 10rem;
+    padding: 1.1rem 1.25rem;
+    background: none;
+    border: 0;
+    border-right: 1px solid var(--rule);
+    text-align: left;
+    cursor: pointer;
+    color: var(--mid);
+    font: inherit;
+    transition: background 120ms linear, color 120ms linear;
+  }
+  .market:last-child { border-right: 0; }
+  .market:hover { background: rgba(20,19,15,0.04); }
+  .market[aria-selected="true"] { background: var(--panel); color: var(--paper); }
+  .market:focus-visible { outline: 2px solid var(--ink); outline-offset: -4px; }
+  .market .name { display: block; font-size: 0.9rem; }
+  .market .value {
+    display: block;
+    font-family: Newsreader, Georgia, serif;
+    font-size: 1.9rem;
+    font-weight: 400;
+    line-height: 1.15;
+    font-variant-numeric: tabular-nums;
+    color: inherit;
+  }
+  .market[aria-selected="true"] .value { color: var(--paper); }
+  .market .rate { display: block; font-size: 0.8rem; opacity: 0.75; font-variant-numeric: tabular-nums; }
+
+  figure { margin: 2.5rem 0 0; }
+  .chart-wrap { overflow-x: auto; }
+  svg { display: block; width: 100%; height: auto; min-width: 20rem; }
+  .axis-line { stroke: var(--rule); stroke-width: 1; }
+  .grid-line { stroke: var(--rule); stroke-width: 1; stroke-dasharray: 2 4; }
+  .series { fill: none; stroke: var(--ink); stroke-width: 1.75; stroke-linejoin: round; }
+  .series-fill { fill: rgba(20,19,15,0.07); stroke: none; }
+  .tick { font-size: 11px; fill: var(--mid); font-family: "IBM Plex Sans", sans-serif; }
+  .marker { fill: var(--ink); }
+  figcaption { color: var(--mid); font-size: 0.9rem; margin-top: 0.9rem; max-width: 58ch; }
+
+  .notes { margin-top: 3.5rem; border-top: 1px solid var(--rule); padding-top: 1.75rem; }
+  .notes h2 {
+    font-family: Newsreader, Georgia, serif;
+    font-weight: 400;
+    font-size: 1.35rem;
+    margin: 0 0 0.6rem;
+  }
+  .notes p { color: var(--mid); max-width: 62ch; margin: 0 0 0.9rem; font-size: 0.95rem; }
+  .notes a { color: var(--ink); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  code {
+    font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+    font-size: 0.85em;
+    word-break: break-all;
+  }
+  footer { margin-top: 2.5rem; color: var(--mid); font-size: 0.85rem; }
+
+  .empty { padding: 3rem 0; color: var(--mid); font-family: Newsreader, Georgia, serif; font-size: 1.2rem; }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="wordmark">Curb</p>
+    <h1>What a dollar really costs in naira, cedi and shilling</h1>
+    <p class="standfirst" id="standfirst">Loading the latest reading.</p>
+  </header>
+
+  <div class="markets" id="markets" role="tablist" aria-label="Choose a market"></div>
+
+  <figure>
+    <div class="chart-wrap"><svg id="chart" viewBox="0 0 900 380" role="img" aria-label="Premium over time"></svg></div>
+    <figcaption id="caption"></figcaption>
+  </figure>
+
+  <section class="notes">
+    <h2>How this is measured</h2>
+    <p>The premium is the gap between what a dollar of USDT trades for on peer-to-peer markets and the reference rate published for that currency. A premium of 8% means buyers are paying 8% more than the reference rate to get hold of dollars.</p>
+    <p id="method-sources">The peer-to-peer figure is the median of the ten deepest sell adverts on the venue named beside each market, taken once a day. The reference rate comes from <a href="https://open.er-api.com/v6/latest/USD">open.er-api.com</a>, which aggregates published rates. It is not a central bank rate, and on days when a central bank rate diverges from it, the premium shown here will understate the official gap.</p>
+    <p id="attestation"></p>
+  </section>
+
+  <footer id="footer"></footer>
+</div>
+
+<script>
+const W = 900, H = 380, PAD = { t: 24, r: 20, b: 34, l: 52 };
+const state = { history: [], fiat: null };
+
+const fmt = (n, d = 2) => n.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+const el = id => document.getElementById(id);
+
+function seriesFor(fiat) {
+  return state.history
+    .filter(r => r.markets?.[fiat]?.premium_pct !== null && r.markets?.[fiat]?.premium_pct !== undefined)
+    .map(r => ({ date: r.date, value: r.markets[fiat].premium_pct }));
+}
+
+function niceBounds(values) {
+  const lo = Math.min(...values), hi = Math.max(...values);
+  const span = Math.max(hi - lo, 1);
+  const step = Math.pow(10, Math.floor(Math.log10(span / 3))) * (span / 3 > 5 * Math.pow(10, Math.floor(Math.log10(span / 3))) ? 5 : span / 3 > 2 * Math.pow(10, Math.floor(Math.log10(span / 3))) ? 2 : 1);
+  return { min: Math.floor(lo / step) * step, max: Math.ceil(hi / step) * step, step };
+}
+
+function drawChart(fiat) {
+  const svg = el("chart");
+  const pts = seriesFor(fiat);
+  if (pts.length < 2) {
+    svg.innerHTML = `<text x="20" y="40" class="tick">Not enough readings yet for ${fiat}.</text>`;
+    return;
+  }
+
+  const { min, max, step } = niceBounds(pts.map(p => p.value));
+  const x = i => PAD.l + (i / (pts.length - 1)) * (W - PAD.l - PAD.r);
+  const y = v => H - PAD.b - ((v - min) / (max - min || 1)) * (H - PAD.t - PAD.b);
+
+  let out = "";
+  for (let v = min; v <= max + 1e-9; v += step) {
+    out += `<line class="grid-line" x1="${PAD.l}" y1="${y(v).toFixed(1)}" x2="${W - PAD.r}" y2="${y(v).toFixed(1)}"/>`;
+    out += `<text class="tick" x="${PAD.l - 8}" y="${(y(v) + 4).toFixed(1)}" text-anchor="end">${fmt(v, step < 1 ? 1 : 0)}%</text>`;
+  }
+
+  const line = pts.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(p.value).toFixed(1)}`).join("");
+  out += `<path class="series-fill" d="${line}L${x(pts.length - 1).toFixed(1)},${H - PAD.b}L${PAD.l},${H - PAD.b}Z"/>`;
+  out += `<path class="series" d="${line}"/>`;
+  out += `<line class="axis-line" x1="${PAD.l}" y1="${H - PAD.b}" x2="${W - PAD.r}" y2="${H - PAD.b}"/>`;
+
+  const last = pts[pts.length - 1];
+  out += `<circle class="marker" cx="${x(pts.length - 1).toFixed(1)}" cy="${y(last.value).toFixed(1)}" r="3.5"/>`;
+
+  const labelAt = i => {
+    const d = new Date(pts[i].date + "T00:00:00Z");
+    return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
+  };
+  [0, Math.floor((pts.length - 1) / 2), pts.length - 1].forEach((i, n) => {
+    out += `<text class="tick" x="${x(i).toFixed(1)}" y="${H - PAD.b + 18}" text-anchor="${n === 0 ? "start" : n === 2 ? "end" : "middle"}">${labelAt(i)}</text>`;
+  });
+
+  svg.innerHTML = out;
+
+  const first = pts[0];
+  const move = last.value - first.value;
+  const direction = Math.abs(move) < 0.05 ? "flat against" : move > 0 ? "wider than" : "narrower than";
+  const src = state.history[state.history.length - 1].markets?.[fiat]?.source;
+  el("caption").textContent =
+    `${fiat}: ${pts.length} daily readings${src ? ", priced on " + src : ""}. Now ${fmt(last.value)}%, ${direction} ${fmt(first.value)}% on ${labelAt(0)}.`;
+}
+
+function select(fiat) {
+  state.fiat = fiat;
+  [...el("markets").children].forEach(b => b.setAttribute("aria-selected", String(b.dataset.fiat === fiat)));
+  drawChart(fiat);
+}
+
+function render() {
+  const latest = state.history[state.history.length - 1];
+  const fiats = Object.keys(latest.markets);
+
+  const headline = latest.markets[fiats[0]];
+  el("standfirst").innerHTML = headline.premium_pct === null
+    ? "No reading for the lead market today."
+    : `Today a dollar of USDT trades at <b>${fmt(headline.premium_pct)}%</b> above the reference rate in ${fiats[0]}, at <b>${fmt(headline.p2p)}</b> against <b>${fmt(headline.reference)}</b>. Updated daily and anchored on Base.`;
+
+  el("markets").innerHTML = fiats.map(f => {
+    const m = latest.markets[f];
+    const v = m.premium_pct === null ? "no data" : `${fmt(m.premium_pct)}%`;
+    const venue = m.source ? ` · ${m.source}` : "";
+    const r = m.p2p === null ? "no venue reporting" : `${fmt(m.p2p)} vs ${fmt(m.reference)}${venue}`;
+    return `<button class="market" role="tab" data-fiat="${f}" aria-selected="false">
+      <span class="name">${f}</span><span class="value">${v}</span><span class="rate">${r}</span></button>`;
+  }).join("");
+
+  [...el("markets").children].forEach(b => b.addEventListener("click", () => select(b.dataset.fiat)));
+  select(fiats[0]);
+
+  if (latest.attestation?.tx) {
+    el("attestation").innerHTML =
+      `Each day's numbers are hashed and written to Base, so a published figure cannot be quietly revised later. Today's hash is <code>${latest.attestation.sha256}</code>, recorded in <a href="https://basescan.org/tx/${latest.attestation.tx}">this transaction</a>.`;
+  } else {
+    el("attestation").textContent = "On-chain anchoring is not configured for this deployment.";
+  }
+
+  el("footer").textContent = `Last fetched ${latest.fetched_at.replace("T", " ").replace("+00:00", " UTC")}. Source data is in the repository as history.json.`;
+}
+
+fetch("data/history.json", { cache: "no-store" })
+  .then(r => r.ok ? r.json() : Promise.reject(new Error(r.status)))
+  .then(h => {
+    state.history = h;
+    if (!h.length) throw new Error("empty history");
+    render();
+  })
+  .catch(() => {
+    el("standfirst").textContent = "No readings yet. The first run of the daily job will fill this in.";
+    el("chart").innerHTML = "";
+  });
+</script>
+</body>
+</html>

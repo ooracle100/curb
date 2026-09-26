@@ -1,0 +1,84 @@
+name: Endpoint reachability check
+
+# Run this BEFORE relying on the daily job. It proves the data sources answer
+# from GitHub's runners, not just from a laptop in Lagos. Exchanges commonly
+# rate-limit or geo-filter datacenter IP ranges.
+#
+# Trigger it from the Actions tab: "Endpoint reachability check" then "Run workflow".
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install requests
+
+      - name: Probe every venue from this runner
+        run: |
+          python - <<'PY'
+          import json, statistics, requests
+
+          HEADERS = {"Content-Type": "application/json",
+                     "User-Agent": "Mozilla/5.0 (compatible; curb/1.0)"}
+          FIATS = ["NGN", "GHS", "KES"]
+          results = {}
+
+          def bybit(fiat):
+              payload = {"userId": "", "tokenId": "USDT", "currencyId": fiat,
+                         "payment": [], "side": "1", "size": "10", "page": "1", "amount": ""}
+              r = requests.post("https://api2.bybit.com/fiat/otc/item/online",
+                                json=payload, headers=HEADERS, timeout=20)
+              items = (r.json().get("result") or {}).get("items") or []
+              prices = [float(i["price"]) for i in items if i.get("price")]
+              return r.status_code, prices
+
+          def binance(fiat):
+              payload = {"asset": "USDT", "fiat": fiat, "tradeType": "SELL",
+                         "page": 1, "rows": 10, "payTypes": []}
+              r = requests.post("https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search",
+                                json=payload, headers=HEADERS, timeout=20)
+              ads = r.json().get("data") or []
+              prices = [float(a["adv"]["price"]) for a in ads if a.get("adv")]
+              return r.status_code, prices
+
+          for name, fn in [("bybit", bybit), ("binance", binance)]:
+              for fiat in FIATS:
+                  try:
+                      status, prices = fn(fiat)
+                      med = statistics.median(prices) if len(prices) >= 3 else None
+                      results[f"{name}:{fiat}"] = {"http": status, "count": len(prices),
+                                                   "median": med}
+                      print(f"{name:8} {fiat}  http {status}  {len(prices):3} adverts  "
+                            f"median {med if med else 'n/a'}")
+                  except Exception as exc:
+                      results[f"{name}:{fiat}"] = {"error": str(exc)[:200]}
+                      print(f"{name:8} {fiat}  ERROR {exc}")
+
+          try:
+              r = requests.get("https://open.er-api.com/v6/latest/USD", timeout=20)
+              rates = r.json().get("rates", {})
+              print(f"\nreference  http {r.status_code}  " +
+                    "  ".join(f"{f} {rates.get(f)}" for f in FIATS))
+              results["reference"] = {"http": r.status_code,
+                                      "rates": {f: rates.get(f) for f in FIATS}}
+          except Exception as exc:
+              print(f"reference  ERROR {exc}")
+              results["reference"] = {"error": str(exc)[:200]}
+
+          print("\n--- JSON ---")
+          print(json.dumps(results, indent=2))
+
+          usable = [k for k, v in results.items()
+                    if k != "reference" and v.get("median") is not None]
+          if not usable:
+              raise SystemExit("No venue returned usable depth from this runner")
+          print(f"\nUsable from CI: {', '.join(usable)}")
+          PY
