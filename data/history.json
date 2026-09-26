@@ -1,15 +1,15 @@
 [
   {
     "date": "2026-09-26",
-    "fetched_at": "2026-09-26T21:01:31+00:00",
+    "fetched_at": "2026-09-26T21:24:37+00:00",
     "asset": "USDT",
     "reference_source": "https://open.er-api.com/v6/latest/USD",
     "reference_asof": "Sat, 26 Sep 2026 00:02:32 +0000",
     "markets": {
       "NGN": {
-        "p2p": 1366.75,
+        "p2p": 1367.05,
         "reference": 1328.9601,
-        "premium_pct": 2.84,
+        "premium_pct": 2.87,
         "depth": 10,
         "source": "bybit"
       },
@@ -27,6 +27,12 @@
         "depth": 10,
         "source": "bybit"
       }
+    },
+    "attestation": {
+      "sha256": "4dbff6229f8544d1873c18531217d5fac32e25c18f3c950b15052ed2f575af2f",
+      "chain": "base",
+      "tx": "0x280244519e89871ab0a4ba1120d0c95515bc97c038440c8a98157147128e49ce",
+      "payload_version": 1
     }
   }
 ]
