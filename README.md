@@ -150,3 +150,5 @@ Budget about ten minutes a month. If it starts needing more, it is not worth kee
 - A weekly summary line you can paste straight into a post.
 - A second asset, USDC, to show where the two diverge.
 - A simple JSON endpoint so other people can pull the series, which is what turns this from a chart into a source other people cite.
+
+Live URL: https://ooracle100.github.io/curb/
