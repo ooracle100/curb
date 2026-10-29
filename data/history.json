@@ -1186,5 +1186,41 @@
       "tx": "0xa3c3954078be8589508fafd31f49eed103d4a44dac2b73b5cfe9526781a75e9e",
       "payload_version": 1
     }
+  },
+  {
+    "date": "2026-10-29",
+    "fetched_at": "2026-10-29T12:24:32+00:00",
+    "asset": "USDT",
+    "reference_source": "https://open.er-api.com/v6/latest/USD",
+    "reference_asof": "Thu, 29 Oct 2026 00:02:31 +0000",
+    "markets": {
+      "NGN": {
+        "p2p": 1378.975,
+        "reference": 1346.2369,
+        "premium_pct": 2.43,
+        "depth": 10,
+        "source": "bybit"
+      },
+      "GHS": {
+        "p2p": 12.03,
+        "reference": 11.6399,
+        "premium_pct": 3.35,
+        "depth": 10,
+        "source": "bybit"
+      },
+      "KES": {
+        "p2p": 130.065,
+        "reference": 129.8324,
+        "premium_pct": 0.18,
+        "depth": 10,
+        "source": "bybit"
+      }
+    },
+    "attestation": {
+      "sha256": "979aeb6af012dffad695a5d15fb9c69df390c2a7cfc4cc7a377e50333f33e93e",
+      "chain": "base",
+      "tx": "0xa299a687d649b0d5e8b2da37b71463e7a9af82435217aa4efe9f93c2bdb9f28d",
+      "payload_version": 1
+    }
   }
 ]
